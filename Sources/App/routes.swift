@@ -2,13 +2,22 @@ import Fluent
 import Vapor
 
 func routes(_ app: Application) throws {
-    app.get { req in
-        return "It works!"
-    }
-
-    app.get("hello") { req -> String in
-        return "Hello, world!"
-    }
-
-    try app.register(collection: TodoController())
+    
+    let moviesController = MoviesController()
+    let reviewsController = ReviewsController()
+    
+    
+    // movies
+    app.post("movies", use: moviesController.create)
+    
+    app.delete("movies", ":movieId", use: moviesController.delete)
+        
+    app.get("movies", use: moviesController.all)
+    
+    
+    // reviews
+    app.post("reviews", use: reviewsController.create)
+    
+    // reviews by movie Id
+    app.get("movies", ":movieId", "reviews", use: reviewsController.getByMovieId)
 }
